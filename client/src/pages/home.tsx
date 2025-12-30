@@ -61,10 +61,10 @@ export default function Home() {
         {/* Left Column: Form */}
         <div className="lg:col-span-2 space-y-8">
           <div className="text-center lg:text-left mb-8 animate-enter">
-            <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 mb-4 bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600">
+            <h1 className="text-4xl md:text-5xl font-display font-bold text-foreground mb-4 bg-clip-text text-transparent bg-gradient-to-r from-foreground to-muted-foreground">
               Generate New Recipe
             </h1>
-            <p className="text-lg text-slate-600 max-w-2xl">
+            <p className="text-lg text-muted-foreground max-w-2xl">
               Create professional order recipes for your hosting clients instantly. 
               All generated recipes are automatically archived.
             </p>
@@ -79,11 +79,11 @@ export default function Home() {
                 exit={{ opacity: 0, y: -20 }}
               >
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-semibold text-slate-800 flex items-center gap-2">
+                  <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
                     <Sparkles className="w-5 h-5 text-primary" />
                     Generated Recipe
                   </h2>
-                  <Button variant="ghost" onClick={() => createRecipe.reset()}>
+                  <Button variant="ghost" onClick={() => createRecipe.reset()} className="hover-elevate">
                     Create Another
                   </Button>
                 </div>
@@ -95,7 +95,7 @@ export default function Home() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="bg-white rounded-2xl border border-slate-200 shadow-xl p-6 md:p-8"
+                className="bg-card rounded-2xl border border-border shadow-xl p-6 md:p-8"
               >
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -104,11 +104,11 @@ export default function Home() {
                       name="fill"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-slate-700 font-semibold">Fill Details</FormLabel>
+                          <FormLabel className="text-foreground font-semibold">Fill Details</FormLabel>
                           <FormControl>
                             <Input 
                               placeholder="e.g. Premium Hosting Package - annual plan" 
-                              className="h-12 text-lg bg-slate-50 border-slate-200 focus:bg-white transition-all" 
+                              className="h-12 text-lg bg-background border-border focus:ring-primary transition-all" 
                               {...field} 
                             />
                           </FormControl>
@@ -122,11 +122,11 @@ export default function Home() {
                       name="info"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-slate-700 font-semibold">Information & Notes</FormLabel>
+                          <FormLabel className="text-foreground font-semibold">Information & Notes</FormLabel>
                           <FormControl>
                             <Textarea 
                               placeholder="Enter detailed specifications, client requirements, or server configuration notes..." 
-                              className="min-h-[160px] text-base resize-y bg-slate-50 border-slate-200 focus:bg-white transition-all" 
+                              className="min-h-[160px] text-base resize-y bg-background border-border focus:ring-primary transition-all" 
                               {...field} 
                             />
                           </FormControl>
@@ -161,8 +161,8 @@ export default function Home() {
         <div className="lg:col-span-1 mt-8 lg:mt-0 animate-enter delay-200">
           <div className="sticky top-24">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-display font-bold text-slate-900 flex items-center gap-2">
-                <History className="w-5 h-5 text-slate-400" />
+              <h2 className="text-xl font-display font-bold text-foreground flex items-center gap-2">
+                <History className="w-5 h-5 text-muted-foreground" />
                 Recent Activity
               </h2>
               <Link href="/history" className="text-sm font-medium text-primary hover:underline flex items-center gap-1">
@@ -173,22 +173,22 @@ export default function Home() {
             <div className="space-y-4">
               {isLoadingHistory ? (
                 Array.from({ length: 3 }).map((_, i) => (
-                  <div key={i} className="h-24 bg-slate-100 rounded-xl animate-pulse" />
+                  <div key={i} className="h-24 bg-muted rounded-xl animate-pulse" />
                 ))
               ) : sidebarRecipes.length > 0 ? (
                 sidebarRecipes.map((recipe) => (
                   <RecipeCard key={recipe.id} recipe={recipe} variant="compact" />
                 ))
               ) : (
-                <div className="text-center py-12 bg-slate-50 rounded-xl border border-dashed border-slate-200">
-                  <p className="text-slate-400 text-sm">No recipes generated yet</p>
+                <div className="text-center py-12 bg-muted/50 rounded-xl border border-dashed border-border">
+                  <p className="text-muted-foreground text-sm">No recipes generated yet</p>
                 </div>
               )}
             </div>
             
             <div className="mt-8 p-6 bg-gradient-to-br from-primary/5 to-blue-500/5 rounded-2xl border border-primary/10">
               <h3 className="font-semibold text-primary mb-2">Pro Tip</h3>
-              <p className="text-sm text-slate-600 leading-relaxed">
+              <p className="text-sm text-muted-foreground leading-relaxed">
                 Use detailed descriptions in the "Info" field. All generated IDs are unique and can be used for tracking orders in your system.
               </p>
             </div>
