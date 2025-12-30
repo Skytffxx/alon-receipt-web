@@ -5,18 +5,10 @@ import { Button } from "@/components/ui/button";
 import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import html2canvas from "html2canvas";
-
-interface RecipeCardProps {
-  recipe: RecipeResponse;
-  variant?: "full" | "compact";
-}
-
-import { Trash2 } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api, buildUrl } from "@shared/routes";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-
 export function RecipeCard({ recipe, variant = "full" }: RecipeCardProps) {
   const [copied, setCopied] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
