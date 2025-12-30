@@ -76,11 +76,11 @@ export default function Home() {
         <div className="lg:col-span-2 space-y-8">
           <div className="text-center lg:text-left mb-8 animate-enter">
             <h1 className="text-4xl md:text-5xl font-display font-bold text-foreground mb-4 bg-clip-text text-transparent bg-gradient-to-r from-foreground to-muted-foreground">
-              Generate New Recipe
+              Generate New Receipt
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl">
-              Create professional order recipes for your hosting clients instantly. 
-              All generated recipes are automatically archived.
+              Create professional order receipts for your hosting clients instantly. 
+              All generated receipts are automatically archived.
             </p>
           </div>
 
@@ -95,7 +95,7 @@ export default function Home() {
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
                     <Sparkles className="w-5 h-5 text-primary" />
-                    Generated Recipe
+                    Generated Receipt
                   </h2>
                   <Button variant="ghost" onClick={() => createRecipe.reset()} className="hover-elevate">
                     Create Another
@@ -278,7 +278,7 @@ export default function Home() {
                           Generating...
                         </>
                       ) : (
-                        "Generate Recipe"
+                        "Generate Receipt"
                       )}
                     </Button>
                   </form>

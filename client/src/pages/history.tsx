@@ -20,10 +20,10 @@ export default function History() {
       <div className="max-w-4xl mx-auto">
         <div className="mb-8 md:mb-12 text-center">
           <h1 className="text-3xl md:text-4xl font-display font-bold text-foreground mb-4">
-            Recipe History
+            Receipt History
           </h1>
           <p className="text-muted-foreground">
-            Browse through all previously generated recipes and orders.
+            Browse through all previously generated receipts and orders.
           </p>
         </div>
 
@@ -59,8 +59,8 @@ export default function History() {
               ))
             ) : (
               <div className="text-center py-20 bg-muted/50 rounded-2xl border border-dashed border-border">
-                <p className="text-muted-foreground text-lg font-medium">No recipes found</p>
-                <p className="text-muted-foreground/60 mt-2">Try adjusting your search or generate a new recipe.</p>
+                <p className="text-muted-foreground text-lg font-medium">No receipts found</p>
+                <p className="text-muted-foreground/60 mt-2">Try adjusting your search or generate a new receipt.</p>
               </div>
             )}
           </div>
