@@ -24,6 +24,8 @@ const formSchema = z.object({
   discordName: z.string().optional(),
 });
 
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
 export default function Home() {
   const { toast } = useToast();
   const createRecipe = useCreateRecipe();
@@ -135,10 +137,21 @@ export default function Home() {
                         name="ram"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-foreground font-semibold">RAM</FormLabel>
-                            <FormControl>
-                              <Input placeholder="e.g. 8GB" {...field} />
-                            </FormControl>
+                            <FormLabel className="text-foreground font-semibold">RAM (GB)</FormLabel>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select RAM" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {Array.from({ length: 100 }, (_, i) => i + 1).map((val) => (
+                                  <SelectItem key={val} value={`${val}GB`}>
+                                    {val} GB
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
                             <FormMessage />
                           </FormItem>
                         )}
@@ -148,10 +161,21 @@ export default function Home() {
                         name="cpu"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-foreground font-semibold">CPU</FormLabel>
-                            <FormControl>
-                              <Input placeholder="e.g. 4 Cores" {...field} />
-                            </FormControl>
+                            <FormLabel className="text-foreground font-semibold">CPU (Cores)</FormLabel>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select CPU" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {Array.from({ length: 100 }, (_, i) => i + 1).map((val) => (
+                                  <SelectItem key={val} value={`${val} Cores`}>
+                                    {val} Cores
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
                             <FormMessage />
                           </FormItem>
                         )}
@@ -161,10 +185,21 @@ export default function Home() {
                         name="disk"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-foreground font-semibold">Disk</FormLabel>
-                            <FormControl>
-                              <Input placeholder="e.g. 100GB NVMe" {...field} />
-                            </FormControl>
+                            <FormLabel className="text-foreground font-semibold">Disk (GB)</FormLabel>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select Disk" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {[...Array.from({ length: 100 }, (_, i) => (i + 1) * 10)].map((val) => (
+                                  <SelectItem key={val} value={`${val}GB`}>
+                                    {val} GB
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
                             <FormMessage />
                           </FormItem>
                         )}
