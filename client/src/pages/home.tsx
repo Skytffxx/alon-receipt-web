@@ -16,6 +16,12 @@ import { motion, AnimatePresence } from "framer-motion";
 const formSchema = z.object({
   fill: z.string().min(1, "Fill details are required"),
   info: z.string().min(1, "Information is required"),
+  ram: z.string().optional(),
+  cpu: z.string().optional(),
+  disk: z.string().optional(),
+  price: z.string().optional(),
+  discordId: z.string().optional(),
+  discordName: z.string().optional(),
 });
 
 export default function Home() {
@@ -28,6 +34,12 @@ export default function Home() {
     defaultValues: {
       fill: "",
       info: "",
+      ram: "",
+      cpu: "",
+      disk: "",
+      price: "",
+      discordId: "",
+      discordName: "",
     },
   });
 
@@ -104,10 +116,10 @@ export default function Home() {
                       name="fill"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-foreground font-semibold">Fill Details</FormLabel>
+                          <FormLabel className="text-foreground font-semibold">Service/Plan Name</FormLabel>
                           <FormControl>
                             <Input 
-                              placeholder="e.g. Premium Hosting Package - annual plan" 
+                              placeholder="e.g. Premium Hosting Package" 
                               className="h-12 text-lg bg-background border-border focus:ring-primary transition-all" 
                               {...field} 
                             />
@@ -116,6 +128,90 @@ export default function Home() {
                         </FormItem>
                       )}
                     />
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="ram"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-foreground font-semibold">RAM</FormLabel>
+                            <FormControl>
+                              <Input placeholder="e.g. 8GB" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="cpu"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-foreground font-semibold">CPU</FormLabel>
+                            <FormControl>
+                              <Input placeholder="e.g. 4 Cores" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="disk"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-foreground font-semibold">Disk</FormLabel>
+                            <FormControl>
+                              <Input placeholder="e.g. 100GB NVMe" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="price"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-foreground font-semibold">Price</FormLabel>
+                            <FormControl>
+                              <Input placeholder="e.g. $19.99/mo" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="discordName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-foreground font-semibold">Discord Name</FormLabel>
+                            <FormControl>
+                              <Input placeholder="e.g. username" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="discordId"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-foreground font-semibold">Discord ID</FormLabel>
+                            <FormControl>
+                              <Input placeholder="e.g. 123456789" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
                     
                     <FormField
                       control={form.control}

@@ -19,7 +19,16 @@ export class DatabaseStorage implements IStorage {
 
     const [recipe] = await db
       .insert(recipes)
-      .values({ ...insertRecipe, publicId })
+      .values({ 
+        ...insertRecipe, 
+        publicId,
+        ram: insertRecipe.ram || null,
+        cpu: insertRecipe.cpu || null,
+        disk: insertRecipe.disk || null,
+        price: insertRecipe.price || null,
+        discordId: insertRecipe.discordId || null,
+        discordName: insertRecipe.discordName || null
+      })
       .returning();
     return recipe;
   }

@@ -1,9 +1,10 @@
 import { type RecipeResponse } from "@shared/routes";
 import { format } from "date-fns";
-import { Printer, Copy, Check, FileText } from "lucide-react";
+import { Download, Copy, Check, FileText, Cpu, HardDrive, Zap, CreditCard, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion } from "framer-motion";
+import html2canvas from "html2canvas";
 
 interface RecipeCardProps {
   recipe: RecipeResponse;
@@ -12,9 +13,24 @@ interface RecipeCardProps {
 
 export function RecipeCard({ recipe, variant = "full" }: RecipeCardProps) {
   const [copied, setCopied] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
 
-  const handlePrint = () => {
-    window.print();
+  const handleDownload = async () => {
+    if (!cardRef.current) return;
+    try {
+      const canvas = await html2canvas(cardRef.current, {
+        backgroundColor: null,
+        scale: 2,
+        logging: false,
+        useCORS: true
+      });
+      const link = document.createElement("a");
+      link.download = `Alon-Receipt-${recipe.publicId}.png`;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    } catch (err) {
+      console.error("Failed to download image", err);
+    }
   };
 
   const handleCopyId = () => {
@@ -46,18 +62,19 @@ export function RecipeCard({ recipe, variant = "full" }: RecipeCardProps) {
 
   return (
     <motion.div 
+      ref={cardRef}
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="bg-card rounded-2xl border border-border shadow-xl overflow-hidden print:shadow-none print:border-none"
+      className="bg-card rounded-2xl border border-border shadow-xl overflow-hidden"
     >
       <div className="bg-muted/30 border-b border-border p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase">
-              Order ID
+              Receipt
             </span>
             <span className="text-xs text-muted-foreground font-medium">
-              Generated on {format(new Date(recipe.createdAt || new Date()), "MMMM d, yyyy 'at' h:mm a")}
+              {format(new Date(recipe.createdAt || new Date()), "MMMM d, yyyy 'at' h:mm a")}
             </span>
           </div>
           <div className="flex items-center gap-3">
@@ -74,35 +91,91 @@ export function RecipeCard({ recipe, variant = "full" }: RecipeCardProps) {
           </div>
         </div>
 
-        <Button onClick={handlePrint} variant="outline" className="print:hidden gap-2 border-border hover:bg-card hover:text-primary hover:border-primary/30 shadow-sm">
-          <Printer className="w-4 h-4" />
-          Print Recipe
+        <Button onClick={handleDownload} variant="outline" className="gap-2 border-border hover:bg-card hover:text-primary hover:border-primary/30 shadow-sm no-default-hover-elevate">
+          <Download className="w-4 h-4" />
+          Download Receipt
         </Button>
       </div>
 
       <div className="p-8 space-y-8">
-        <div>
-          <h3 className="text-sm uppercase tracking-wider text-muted-foreground font-semibold mb-3 flex items-center gap-2">
-            <FileText className="w-4 h-4" />
-            Fill Details
-          </h3>
-          <div className="bg-muted/50 rounded-xl p-4 border border-border text-lg text-foreground font-medium">
-            {recipe.fill}
-          </div>
-        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-sm uppercase tracking-wider text-muted-foreground font-semibold mb-3 flex items-center gap-2">
+                <FileText className="w-4 h-4" />
+                Service Name
+              </h3>
+              <div className="bg-muted/50 rounded-xl p-4 border border-border text-lg text-foreground font-medium">
+                {recipe.fill}
+              </div>
+            </div>
 
-        <div>
-          <h3 className="text-sm uppercase tracking-wider text-muted-foreground font-semibold mb-3">
-            Additional Information
-          </h3>
-          <div className="prose dark:prose-invert max-w-none text-muted-foreground">
-            <p className="whitespace-pre-wrap leading-relaxed">{recipe.info}</p>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="p-4 bg-muted/30 rounded-xl border border-border/50">
+                <div className="flex items-center gap-2 text-muted-foreground text-xs uppercase font-bold mb-1">
+                  <Zap className="w-3 h-3" /> RAM
+                </div>
+                <div className="font-semibold text-foreground">{recipe.ram || "N/A"}</div>
+              </div>
+              <div className="p-4 bg-muted/30 rounded-xl border border-border/50">
+                <div className="flex items-center gap-2 text-muted-foreground text-xs uppercase font-bold mb-1">
+                  <Cpu className="w-3 h-3" /> CPU
+                </div>
+                <div className="font-semibold text-foreground">{recipe.cpu || "N/A"}</div>
+              </div>
+              <div className="p-4 bg-muted/30 rounded-xl border border-border/50">
+                <div className="flex items-center gap-2 text-muted-foreground text-xs uppercase font-bold mb-1">
+                  <HardDrive className="w-3 h-3" /> Disk
+                </div>
+                <div className="font-semibold text-foreground">{recipe.disk || "N/A"}</div>
+              </div>
+              <div className="p-4 bg-muted/30 rounded-xl border border-border/50">
+                <div className="flex items-center gap-2 text-muted-foreground text-xs uppercase font-bold mb-1">
+                  <CreditCard className="w-3 h-3" /> Price
+                </div>
+                <div className="font-semibold text-primary">{recipe.price || "N/A"}</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            {(recipe.discordName || recipe.discordId) && (
+              <div>
+                <h3 className="text-sm uppercase tracking-wider text-muted-foreground font-semibold mb-3 flex items-center gap-2">
+                  <User className="w-4 h-4" />
+                  Client Information
+                </h3>
+                <div className="bg-muted/30 rounded-xl p-4 border border-border space-y-2">
+                  {recipe.discordName && (
+                    <div className="flex justify-between">
+                      <span className="text-sm text-muted-foreground">Discord:</span>
+                      <span className="text-sm font-medium text-foreground">{recipe.discordName}</span>
+                    </div>
+                  )}
+                  {recipe.discordId && (
+                    <div className="flex justify-between">
+                      <span className="text-sm text-muted-foreground">ID:</span>
+                      <span className="text-sm font-mono text-foreground">{recipe.discordId}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            <div>
+              <h3 className="text-sm uppercase tracking-wider text-muted-foreground font-semibold mb-3">
+                Additional Notes
+              </h3>
+              <div className="prose dark:prose-invert max-w-none text-muted-foreground bg-muted/20 p-4 rounded-xl border border-border/50">
+                <p className="whitespace-pre-wrap text-sm leading-relaxed">{recipe.info}</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
       
-      <div className="bg-muted/50 p-4 border-t border-border text-center text-xs text-muted-foreground print:block hidden">
-        Generated by Alon Hosting PH Recipe Generator • {window.location.href}
+      <div className="bg-muted/50 p-4 border-t border-border text-center text-[10px] text-muted-foreground">
+        Generated by Alon Hosting PH • {recipe.publicId}
       </div>
     </motion.div>
   );
