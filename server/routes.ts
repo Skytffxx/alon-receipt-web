@@ -50,9 +50,17 @@ export async function registerRoutes(
   app.get(api.recipes.get.path, async (req, res) => {
     const recipe = await storage.getRecipe(req.params.publicId);
     if (!recipe) {
-      return res.status(404).json({ message: 'Recipe not found' });
+      return res.status(404).json({ message: 'Receipt not found' });
     }
     res.json(recipe);
+  });
+
+  app.delete(api.recipes.delete.path, async (req, res) => {
+    const success = await storage.deleteReceipt(req.params.publicId);
+    if (!success) {
+      return res.status(404).json({ message: 'Receipt not found' });
+    }
+    res.status(204).end();
   });
 
   return httpServer;

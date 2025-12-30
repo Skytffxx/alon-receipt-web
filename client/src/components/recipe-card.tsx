@@ -1,6 +1,6 @@
 import { type RecipeResponse } from "@shared/routes";
 import { format } from "date-fns";
-import { Download, Copy, Check, FileText, Cpu, HardDrive, Zap, CreditCard, User } from "lucide-react";
+import { Download, Copy, Check, FileText, Cpu, HardDrive, Zap, CreditCard, User, Trash2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState, useRef } from "react";
 import { motion } from "framer-motion";
@@ -11,9 +11,37 @@ interface RecipeCardProps {
   variant?: "full" | "compact";
 }
 
+import { Trash2 } from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { api, buildUrl } from "@shared/routes";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
+
 export function RecipeCard({ recipe, variant = "full" }: RecipeCardProps) {
   const [copied, setCopied] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  const deleteMutation = useMutation({
+    mutationFn: async () => {
+      await apiRequest("DELETE", buildUrl(api.recipes.delete.path, { publicId: recipe.publicId }));
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [api.recipes.list.path] });
+      toast({
+        title: "Receipt deleted",
+        description: "The receipt has been successfully removed from history.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to delete receipt",
+      });
+    },
+  });
 
   const handleDownload = async () => {
     if (!cardRef.current) return;
@@ -91,10 +119,25 @@ export function RecipeCard({ recipe, variant = "full" }: RecipeCardProps) {
           </div>
         </div>
 
-        <Button onClick={handleDownload} variant="outline" className="gap-2 border-slate-700 bg-slate-900 text-slate-300 hover:bg-slate-800 hover:text-white hover:border-slate-600 shadow-sm no-default-hover-elevate">
-          <Download className="w-4 h-4" />
-          Download Receipt
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button onClick={handleDownload} variant="outline" className="gap-2 border-slate-700 bg-slate-900 text-slate-300 hover:bg-slate-800 hover:text-white hover:border-slate-600 shadow-sm no-default-hover-elevate">
+            <Download className="w-4 h-4" />
+            Download Receipt
+          </Button>
+          <Button 
+            onClick={() => {
+              if (confirm("Are you sure you want to delete this receipt?")) {
+                deleteMutation.mutate();
+              }
+            }} 
+            variant="ghost" 
+            size="icon" 
+            className="text-slate-500 hover:text-red-500 hover:bg-red-500/10 no-default-hover-elevate"
+            disabled={deleteMutation.isPending}
+          >
+            {deleteMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+          </Button>
+        </div>
       </div>
 
       <div className="p-8 space-y-8 bg-gradient-to-b from-slate-950 to-slate-900">

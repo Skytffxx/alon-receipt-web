@@ -7,6 +7,7 @@ export interface IStorage {
   createRecipe(recipe: InsertRecipe): Promise<Recipe>;
   getRecipes(): Promise<Recipe[]>;
   getRecipe(publicId: string): Promise<Recipe | undefined>;
+  deleteReceipt(publicId: string): Promise<boolean>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -43,6 +44,11 @@ export class DatabaseStorage implements IStorage {
       .from(recipes)
       .where(eq(recipes.publicId, publicId));
     return recipe;
+  }
+
+  async deleteReceipt(publicId: string): Promise<boolean> {
+    const result = await db.delete(recipes).where(eq(recipes.publicId, publicId)).returning();
+    return result.length > 0;
   }
 }
 
