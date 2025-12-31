@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { insertRecipeSchema, recipes } from './schema';
+export { insertRecipeSchema };
 
 export const errorSchemas = {
   validation: z.object({
